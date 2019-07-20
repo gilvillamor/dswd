@@ -67,11 +67,11 @@ $row=mysqli_fetch_array($result);
 </li>
 <li>
 
-<li class="active open">
+
 <a href="student_profile.php">
 <div class="item-content">
 <div class="item-media">
-<i class="ti-location-pin"></i>
+<i class="ti-user"></i>
 </div>
 <div class="item-inner">
 <span class="title"> Student Profiling </span>
@@ -81,7 +81,7 @@ $row=mysqli_fetch_array($result);
 </li>
 
 <li>
-<a href="school_list.php">
+<a href="schools.php">
 <div class="item-content">
 <div class="item-media">
 <i class="ti-location-pin"></i>
@@ -94,7 +94,7 @@ $row=mysqli_fetch_array($result);
 </li>
 
 <li>
-<a href="view_students_schools.php">
+<a href="cv_home.php">
 <div class="item-content">
 <div class="item-media">
 <i class="ti-pie-chart"></i>

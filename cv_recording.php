@@ -1,4 +1,5 @@
-<!-- Ine na form amu ine hea it ma execute hit akon updating tikang ha update_student form na user interface ngan student_masterlist -->
+<!-- this form amu ine hea it ma save tikadto database ht kanan akun not compliant from cv_input form -->
+
 <?php
 
 include("connections.php");
@@ -12,6 +13,7 @@ $new_school_coordinator_name = $_POST["new_school_coordinator_name"];
 $new_school_coordinator_other = $_POST["new_school_coordinator_other"];
 $new_swa_name = $_POST["new_swa_name"];
 $new_household_id = $_POST["new_household_id"];
+$new_household_member_id = $_POST["new_household_member_id"];
 $new_fname = $_POST["new_fname"];
 $new_lname = $_POST["new_lname"];
 $new_sex = $_POST["new_sex"];

@@ -1,58 +1,47 @@
 <?php
-
+///this is the database connection
 include ("connections.php");
 //this is for the header and body
 include ("header.php");
+
 //declare han variables pati ha declare han error message
 $school_name = $barangay_name = $municipality_name = $province_name = "";
-$school_nameErr = $barangay_nameErr = $municipality_nameErr = $province_nameErr =  "";
-///pag check kun blank it textbox
+$school_nameErr = $barangay_nameErr = $municipality_nameErr =$province_nameErr = "";
+///pag check kun blank it textbox tapos ma gawas error message
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
 
 if(empty($_POST["school_name"])) {
-$school_nameErr="School name is required!";
+$school_nameErr="This data is required!";
 }else{
 $school_name=$_POST["school_name"];
 }
 
 if(empty($_POST["barangay_name"])) {
-$barangay_nameErr="School ID is required!";
+$barangay_nameErr="This data is required!";
 }else{
 $barangay_name=$_POST["barangay_name"];
 }
 
 if(empty($_POST["municipality_name"])) {
-$municipality_nameErr="School ID is required!";
+$municipality_nameErr="This data is required!";
 }else{
 $municipality_name=$_POST["municipality_name"];
 }
 
-if(empty($_POST["province_name"])) {
-$province_nameErr="School ID is required!";
+if(empty($_POST["province_name"])){
+$province_nameErr="This data is required!";
 }else{
 $province_name=$_POST["province_name"];
 }
-
-
+}
+/////connection pag insert hin data ha tbl_students_beneficiary_profile
+if($school_name && $barangay_name && $municipality_name && $province_name ){
+$query = mysqli_query($connections, "INSERT into tbl_schools(school_name, barangay_name, municipality_name, province_name)values('$school_name','$barangay_name','$municipality_name','$province_name')");
+echo "<script language='javascript'>alert('New data was inserted')</script>";
+echo "<script>window.location.href='schools.php';</script>";
 }
 
-
-$user_id=$_REQUEST["id"];
-
-$user_id;
-
-include ("connections.php");
-
-$get_record=mysqli_query ($connections, "SELECT * FROM tbl_schools WHERE id='$user_id'");
-
-while($row_edit=mysqli_fetch_assoc($get_record)) {
-
-
-$db_school_name=$row_edit["school_name"];
-$db_barangay_name=$row_edit["barangay_name"];
-$db_municipality_name=$row_edit["municipality_name"];
-$db_province_name=$row_edit["province_name"];
-}
+////Pagpa gawas ht data tikang ha database to combo box
 
 //query para han connection han dropdownlist han kanan tbl_grade_level
 $query2 = "SELECT barangay_name FROM tbl_barangay";
@@ -63,7 +52,6 @@ $result3 = mysqli_query($connections, $query3);
 //query para han connection han dropdownlist han kanan tbl_school na dapat name la han schools it magawas
 $query4 = "SELECT province_name FROM tbl_province";
 $result4 = mysqli_query($connections, $query4);
-
 ?>
 
 <div class="main-content" >
@@ -73,41 +61,36 @@ $result4 = mysqli_query($connections, $query4);
 <div class="container-fluid container-fullw bg-white">
 <div class="row">
 <div class="col-md-12">
-	<h5 class="over-title margin-bottom-15">SCHOOL <span class="text-bold">PROFILE</span></h5><hr>
-	
-	<!-- I will start my codes here for dashboard -->
+<h5 class="over-title margin-bottom-15">SCHOOL <span class="text-bold">DETAILS</span></h5><hr>
+
 <div class="container-fluid container-fullw bg-white">
 <div class="row">
 <div class="col-md-12">
-	<div class="tabbable">
-		<ul id="myTab1" class="nav nav-tabs">
-			<li class="active">
-				<a href="#myTab1_example1" data-toggle="tab">
-					Update Student Profile
-				</a>
-			</li>
-		</ul>
-		<div class="tab-content">
+<div class="tabbable">
+<ul id="myTab1" class="nav nav-tabs">
+<li class="active">
+<a href="#myTab1_example1" data-toggle="tab">
+Schools
+</a>
+</li>
+<li>
+<a href="#myTab1_example2" data-toggle="tab">
+School List and Updating
+</a>
+</li>
+</ul>
+<div class="tab-content">
+<!-- I will start my Tab1 here -->
 
-<!-- Mytab1 only kay para updating la ine hea -->
 <div class="tab-pane fade in active" id="myTab1_example1">
-					<!--start the code for tab2-->
-<!-- Code kun ngain magawas it data han ig uupdate -->
-<p>
-
 <fieldset>
-<legend>Update Student Details</legend>
+<legend>Student Details</legend>
 <div class="row">
 <div class="col-md-6">
-<div class="form-group"> 
-
-<form method="POST" action="update_school_record.php">
-<!-- ine na code gin hide ko an bali id ito hea na ada database -->
-<input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-
+<div class="form-group"> <form method="POST" action="<?php htmlspecialchars("PHP_SELF"); ?>">
 
 <label>School Name<span class="symbol required"></span></label>
-<input type="text" class="form-control" name="school_name" value="<?php echo $db_school_name; ?>"><br>
+<input type="text" class="form-control" name="school_name" value="<?php echo $school_name; ?>"><br>
 <span class="error"><?php echo $school_nameErr; ?></span>
 
 <label>Barangay Name<span class="symbol required"></span></label>
@@ -132,17 +115,19 @@ $result4 = mysqli_query($connections, $query4);
 </select><br>
 
 
-<a href="schools.php"><button type="button" class="btn btn-primary btn-wide pull-left">
-<i class="fa fa-arrow-circle-left"></i> Back 
-</button></a>
 <button class="btn btn-primary btn-wide pull-right" type="submit" value="Save">
 Register <i class="fa fa-arrow-circle-right"></i>
-</button>
-
+</button>	
 
 </div>
 </div>
+
+<div class="col-md-6">
+<div class="form-group">
+
 </form>
+</div>
+</div>
 </div>
 <div class="row">
 <div class="col-md-6">
@@ -151,7 +136,62 @@ Register <i class="fa fa-arrow-circle-right"></i>
 </div>
 </div>
 </div>
-</fieldset>						
+</div>								
+
+<!-- I will end my Tab1 here -->
+<div class="tab-pane fade" id="myTab1_example2">
+<!--start the code for tab2-->
+<!-- Code kun ngain magawas it data han ig uupdate -->
+<p>
+
+<!-- Adi hea na codes para na han table kun ngain ka ma search han im ig uupdate -->
+<table class="table table-striped table-bordered table-hover table-full-width" id="sample_1">
+<thead>
+<tr>
+<th>School Name</th>
+<th>Barangay</th>
+<th>Municipality</th>
+<th>Province</th>
+<th><b>ACTIONS</b></th>
+</tr>
+</thead>
+<tbody>
+<?php
+$query = "SELECT id,school_name,barangay_name,municipality_name,province_name FROM tbl_schools ORDER BY school_name";
+$result4 = mysqli_query($connections, $query);
+while($row = mysqli_fetch_assoc($result4)) {
+$user_id = $row["id"];
+$school_name = $row["school_name"];
+$barangay_name = $row["barangay_name"];
+$municipality_name = $row["municipality_name"];
+$province_name = $row["province_name"];
+
+echo "<tr>
+<td>$school_name</td>
+<td>$barangay_name</td>
+<td>$municipality_name</td>
+<td>$province_name</td>
+
+<td><a href='update_school_name.php?id=$user_id'>Update</a></td>
+
+</tr>";
+}
+
+?>
+<!-- end data table -->
+</tbody>
+
+</table>
+
+
+<div class="row">
+<div class="col-md-6">
+<div class="form-group">
+
+</div>
+</div>
+</div>
+
 
 </div>
 </div>
@@ -164,6 +204,12 @@ Register <i class="fa fa-arrow-circle-right"></i>
 </div>
 </div>
 <p>
+<a href="#myTab1_example1" class="btn btn-primary btn-o show-tab">
+School Profiling
+</a>
+<a href="#myTab1_example2" class="btn btn-primary btn-o show-tab">
+Update School Details
+</a>
 </p>
 </div>
 </div>
@@ -179,7 +225,6 @@ Register <i class="fa fa-arrow-circle-right"></i>
 <?php
 include ("footer.php");
 ?>
-</div>
 
 <!-- start: MAIN JAVASCRIPTS -->
 <script src="vendor/jquery/jquery.min.js"></script>

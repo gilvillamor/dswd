@@ -5,65 +5,70 @@ include ("connections.php");
 include ("header.php");
 
 //declare han variables pati ha declare han error message
-$household_id = $fname = $lname = $sex = $recorded_grade_level = $school_name = $municipality = $barangay = "";
-$household_idErr = $fnameErr =$lnameErr = $sexErr = $recorded_grade_levelErr = $school_nameErr = $municipalityErr = $barangayErr = "";
+$household_id = $household_member_id = $fname = $lname = $sex = $recorded_grade_level = $school_name = $municipality = $province = "";
+$household_idErr = $household_member_idErr = $fnameErr =$lnameErr = $sexErr = $recorded_grade_levelErr = $school_nameErr = $municipalityErr = $provinceErr = "";
 ///pag check kun blank it textbox tapos ma gawas error message
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
 
 if(empty($_POST["household_id"])) {
-$household_idErr="Household ID is required!";
+$household_idErr="This data is required!";
 }else{
 $household_id=$_POST["household_id"];
 }
 
+if(empty($_POST["household_member_id"])) {
+$household_member_idErr="This data is required!";
+}else{
+$household_member_id=$_POST["household_member_id"];
+}
+
 if(empty($_POST["fname"])) {
-$fnameErr="First Name is required!";
+$fnameErr="This data is required!";
 }else{
 $fname=$_POST["fname"];
-
 }
 
 if(empty($_POST["lname"])){
-$lnameErr="Last Name is required!";
+$lnameErr="This data is required!";
 }else{
 $lname=$_POST["lname"];
 }
 
 if(empty($_POST["sex"])) {
-$sexErr="Please state the gender!";
+$sexErr="This data is required!";
 }else{
 $sex=$_POST["sex"];
 }
 
 if(empty($_POST["recorded_grade_level"])) {
-$recorded_grade_levelErr="Please state the grade level required!";
+$recorded_grade_levelErr="This data is required!";
 }else{
 $recorded_grade_level=$_POST["recorded_grade_level"];
 }
 
 if(empty($_POST["school_name"])) {
-$school_nameErr="Please state the grade level required!";
+$school_nameErr="This data is required!";
 }else{
 $school_name=$_POST["school_name"];
 }
 
 if(empty($_POST["municipality"])) {
-$municipalityErr="Please state the grade level required!";
+$municipalityErr="This data is required!";
 }else{
 $municipality=$_POST["municipality"];
 }
 
-if(empty($_POST["barangay"])) {
-$barangayErr="Please state the grade level required!";
+if(empty($_POST["province"])) {
+$provinceErr="This data is required!";
 }else{
-$barangay=$_POST["barangay"];
+$province=$_POST["province"];
 }
 }
 /////connection pag insert hin data ha tbl_students_beneficiary_profile
-if($household_id && $fname && $lname && $sex && $recorded_grade_level && $school_name && $municipality && $barangay){
-$query = mysqli_query($connections, "INSERT into tbl_students_beneficiary_profile(household_id, fname, lname, sex, recorded_grade_level, school_name, municipality, barangay)values('$household_id','$fname','$lname','$sex','$recorded_grade_level','$school_name','$municipality','$barangay')");
+if($household_id && $household_member_id && $fname && $lname && $sex && $recorded_grade_level && $school_name && $municipality && $province ){
+$query = mysqli_query($connections, "INSERT into tbl_students_beneficiary_profile(household_id, household_member_id, fname, lname, sex, recorded_grade_level, school_name, municipality, province)values('$household_id','$household_member_id','$fname','$lname','$sex','$recorded_grade_level','$school_name','$municipality','$province')");
 echo "<script language='javascript'>alert('New data was inserted')</script>";
-echo "<script>window.location.href='student_masterlist.php';</script>";
+echo "<script>window.location.href='student_profile.php';</script>";
 }
 
 ////Pagpa gawas ht data tikang ha database to combo box
@@ -74,10 +79,10 @@ $result1 = mysqli_query($connections, $query1);
 $query2 = "SELECT school_name FROM tbl_schools";
 $result2 = mysqli_query($connections, $query2);
 //query para han connection han dropdownlist han kanan tbl_municipality
-$query3 = "SELECT * FROM tbl_municipality";
+$query3 = "SELECT municipality_name FROM tbl_municipality";
 $result3 = mysqli_query($connections, $query3);
 //query para han connection han dropdownlist han kanan tbl_school na dapat name la han schools it magawas
-$query4 = "SELECT barangay_name FROM tbl_barangay";
+$query4 = "SELECT province_name FROM tbl_province";
 $result4 = mysqli_query($connections, $query4);
 ?>
 
@@ -119,6 +124,9 @@ Student List and Updating
 <label>Household ID<span class="symbol required"></span></label>
 <input type="text" class="form-control" name="household_id" value="<?php echo $household_id; ?>"><br>
 <span class="error"><?php echo $household_idErr; ?></span>
+<label>Household Member ID<span class="symbol required"></span></label>
+<input type="text" class="form-control" name="household_member_id" value="<?php echo $household_member_id; ?>"><br>
+<span class="error"><?php echo $household_member_idErr; ?></span>
 <label>First Name<span class="symbol required"></span></label>
 <input type="text" class="form-control" name="fname" value="<?php echo $fname; ?>"><br>
 <span class="error"><?php echo $fnameErr; ?></span>
@@ -154,14 +162,14 @@ Student List and Updating
 <label>Municipality<span class="symbol required"></span></label>
 <select class="form-control" name="municipality" value="<?php echo $municipality; ?>">
 <?php while($row1 = mysqli_fetch_array($result3)):;?>
-<option><?php echo $row1['city'];?></option>
+<option><?php echo $row1['municipality_name'];?></option>
 <?php endwhile;?>
 </select><br>
 
-<label>Barangay<span class="symbol required"></span></label>
-<select class="form-control" name="barangay" value="<?php echo $barangay; ?>">
+<label>Province<span class="symbol required"></span></label>
+<select class="form-control" name="province" value="<?php echo $province; ?>">
 <?php while($row1 = mysqli_fetch_array($result4)):;?>
-<option><?php echo $row1['barangay_name'];?></option>
+<option><?php echo $row1['province_name'];?></option>
 <?php endwhile;?>
 </select><br>
 
@@ -192,38 +200,41 @@ Register <i class="fa fa-arrow-circle-right"></i>
 <table class="table table-striped table-bordered table-hover table-full-width" id="sample_1">
 <thead>
 <tr>
+<th>Household ID</th>
 <th>Household Member ID</th>
 <th>Name</th>
-<th>Sex</th>
+<th>Gender</th>
 <th>Grade Level</th>
 <th>School</th>
 <th>Municipality</th>
-<th>Barangay</th>
+<th>Province</th>
 <th><b>ACTIONS</b></th>
 </tr>
 </thead>
 <tbody>
 <?php
-$query = "SELECT CONCAT(lname, ', ', fname)AS fullname, id, household_id, sex, recorded_grade_level,school_name, municipality, barangay FROM tbl_students_beneficiary_profile ORDER BY fname";
+$query = "SELECT CONCAT(lname, ', ', fname)AS fullname,id,household_id,household_member_id,sex,recorded_grade_level,school_name,municipality, province FROM tbl_students_beneficiary_profile ORDER BY lname";
 $result4 = mysqli_query($connections, $query);
 while($row = mysqli_fetch_assoc($result4)) {
 $user_id = $row["id"];
 $household_id = $row["household_id"];
+$household_member_id = $row["household_member_id"];
 $fullname = $row["fullname"];
 $sex = $row["sex"];
 $recorded_grade_level = $row["recorded_grade_level"];
 $school_name = $row["school_name"];
 $municipality = $row["municipality"];
-$barangay = $row["barangay"];
+$province = $row["province"];
 
 echo "<tr>
 <td>$household_id</td>
+<td>$household_member_id</td>
 <td>$fullname</td>
 <td>$sex</td>
 <td>$recorded_grade_level</td>
 <td>$school_name</td>
 <td>$municipality</td>
-<td>$barangay</td>
+<td>$province</td>
 
 <td><a href='update_student.php?id=$user_id'>Update</a></td>
 
